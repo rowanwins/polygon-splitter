@@ -1,0 +1,48 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'test' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.3
+4 verbose run-script [ 'pretest', 'test', 'posttest' ]
+5 info lifecycle polysplit@0.0.1~pretest: polysplit@0.0.1
+6 silly lifecycle polysplit@0.0.1~pretest: no script for pretest, continuing
+7 info lifecycle polysplit@0.0.1~test: polysplit@0.0.1
+8 verbose lifecycle polysplit@0.0.1~test: unsafe-perm in lifecycle true
+9 verbose lifecycle polysplit@0.0.1~test: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\code\polysplit\node_modules\.bin;C:\Program Files\ConEmu\ConEmu\Scripts;C:\Program Files\ConEmu;C:\Program Files\ConEmu\ConEmu;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Hexagon\ERDAS IMAGINE 2016\;C:\Users\Winsemius\AppData\Local\Atlassian\SourceTree\git_local;C:\Program Files (x86)\Yarn\bin;C:\Users\Winsemius\AppData\Local\Microsoft\WindowsApps;C:\Users\Winsemius\AppData\Roaming\npm;C:\Python27\ArcGIS10.5;C:\Python27\ArcGIS10.5\Scripts;C:\Program Files\QGIS 2.18\bin;C:\Users\Winsemius\AppData\Local\Atlassian\SourceTree\git_local\cmd;C:\Users\Winsemius\AppData\Local\Yarn\bin
+10 verbose lifecycle polysplit@0.0.1~test: CWD: C:\code\polysplit
+11 silly lifecycle polysplit@0.0.1~test: Args: [ '/d /s /c', 'ava' ]
+12 silly lifecycle polysplit@0.0.1~test: Returned: code: 1  signal: null
+13 info lifecycle polysplit@0.0.1~test: Failed to exec test script
+14 verbose stack Error: polysplit@0.0.1 test: `ava`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:255:16)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at EventEmitter.emit (events.js:191:7)
+14 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:40:14)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at ChildProcess.emit (events.js:191:7)
+14 verbose stack     at maybeClose (internal/child_process.js:886:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+15 verbose pkgid polysplit@0.0.1
+16 verbose cwd C:\code\polysplit
+17 error Windows_NT 10.0.16299
+18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "test"
+19 error node v6.10.3
+20 error npm  v3.10.10
+21 error code ELIFECYCLE
+22 error polysplit@0.0.1 test: `ava`
+22 error Exit status 1
+23 error Failed at the polysplit@0.0.1 test script 'ava'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the polysplit package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     ava
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs polysplit
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls polysplit
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

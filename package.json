@@ -1,0 +1,44 @@
+{
+  "name": "polysplit",
+  "version": "0.0.1",
+  "description": "Polygon splitting based on algorithm by David Geier.",
+  "main": "dist/polysplit.js",
+  "module": "src/index.js",
+  "scripts": {
+    "bench": "npm run build && node benchmark.js",
+    "build": "rollup src/index.js --o dist/polysplit.js --f cjs",
+    "test": "ava"
+  },
+  "author": "Rowan Winsemius",
+  "repository": {
+    "url": "git+https://github.com/rowanwins/polysplit.git",
+    "type": "git"
+  },
+  "ava": {
+    "files": [
+      "test/test.js"
+    ],
+    "require": [
+      "@babel/register"
+    ]
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/register": "^7.0.0-beta.40",
+    "ava": "^1.0.0-beta.3",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^2.0.0-alpha.20",
+    "benchmark": "^2.1.4",
+    "eslint": "^4.16.0",
+    "eslint-config-mourner": "^2.0.3",
+    "load-json-file": "^4.0.0",
+    "rollup": "^0.54.1",
+    "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "@turf/boolean-clockwise": "^6.0.1",
+    "datastructures-js": "^5.1.4",
+    "linked-list": "^1.0.3",
+    "tinyqueue": "^1.2.3"
+  }
+}
