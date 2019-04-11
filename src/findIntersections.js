@@ -26,8 +26,8 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
       const intersection = getEdgeIntersection(lineEdge, potentialEdge)
       if (intersection !== null) {
         for (iii = 0; iii < intersection.length; iii++) {
+          var ip = new IntersectionPoint(intersection[iii], lineEdge, potentialEdge, isEven(countIntersections))
           countIntersections = countIntersections + 1
-          var ip = new IntersectionPoint(intersection[iii], lineEdge, potentialEdge)
           if (ipOnLineSegment > 0 && compareIpLocations(intersection[iii], intersectingPoints[intersectingPoints.length - 1].p, lineEdge.p1.p)) {
             intersectingPoints.splice(intersectingPoints.length - 1, 0, ip)
           } else {
@@ -39,6 +39,10 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
     }
   }
 
+}
+
+function isEven(n) {
+  return n % 2 === 0
 }
 
 var EPSILON = 1e-9

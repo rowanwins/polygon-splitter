@@ -7,6 +7,7 @@
   "scripts": {
     "bench": "npm run build && node benchmark.js",
     "build": "rollup src/index.js --o dist/polysplit.js --f cjs",
+    "debug": "cross-env webpack-dev-server --config debug/webpack.config.js --mode development --open --hot",
     "test": "ava"
   },
   "author": "Rowan Winsemius",

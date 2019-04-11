@@ -3,11 +3,15 @@ import {Point} from './Point'
 
 export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, polygonEdgeQueue) {
   var i, ii, j, polygonSet, p1, p2, e = null
-  const lineLength = line.length - 1
 
-  p1 = new Point(line[0])
+  const linegeom = line.type === 'Feature' ? line.geometry : line
+
+  let linecoords = linegeom.coordinates
+  const lineLength = linecoords.length - 1
+
+  p1 = new Point(linecoords[0])
   for (i = 0; i < lineLength; i++) {
-    p2 = new Point(line[i + 1])
+    p2 = new Point(linecoords[i + 1])
     p1.nextPoint = p2
     p2.prevPoint = p1
     lineEdges.push(new Edge(p1, p2, 'polyline', i))
@@ -20,16 +24,19 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, pol
     p1 = p2
   }
 
-  polylineBbox[0] = Math.min(polylineBbox[0], line[lineLength][0])
-  polylineBbox[1] = Math.min(polylineBbox[1], line[lineLength][1])
-  polylineBbox[2] = Math.max(polylineBbox[2], line[lineLength][0])
-  polylineBbox[3] = Math.max(polylineBbox[3], line[lineLength][1])
+  polylineBbox[0] = Math.min(polylineBbox[0], linecoords[lineLength][0])
+  polylineBbox[1] = Math.min(polylineBbox[1], linecoords[lineLength][1])
+  polylineBbox[2] = Math.max(polylineBbox[2], linecoords[lineLength][0])
+  polylineBbox[3] = Math.max(polylineBbox[3], linecoords[lineLength][1])
 
+  const polygeom = polygon.type === 'Feature' ? polygon.geometry : polygon
 
-  const polyLength = polygon.length
+  let polycoords = polygeom.coordinates
+
+  const polyLength = polycoords.length
 
   for (i = 0, ii = polyLength; i < ii; i++) {
-    polygonSet = polygon[i]
+    polygonSet = polycoords[i]
     const tempArray = []
     p1 = new Point(polygonSet[0])
     tempArray.push(p1)

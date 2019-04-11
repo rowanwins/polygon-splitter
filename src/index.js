@@ -6,6 +6,7 @@ const polylineEdges = []
 import {compareEdges, compareIpLocations} from './compareEdges'
 import {fillQueue} from './fillQueue'
 import {findIntersectionPoints} from './findIntersections.js'
+import { _debugIntersectionPoints, _debugFillSection } from './debug'
 
 const polygonEdgeQueue = new TinyQueue(null, compareEdges)
 const polylineBbox = [Infinity, Infinity, Infinity, Infinity]
@@ -24,14 +25,19 @@ export default function (polygon, line) {
   // Section 3.2 of paper
   findIntersectionPoints(polygonEdges, polylineEdges, intersections)
 
-  // console.log(intersections.map(function (ip) {
-  //   return ip.p
-  // }))
+  for (var i = 0; i < intersections.length - 1; i++) {
+    intersections[i].nextIntersection = intersections[i + 1]
+  }
+  // intersections[intersections.length - 1].nextIntersection = intersections[0]
+  _debugIntersectionPoints(intersections)
+
+  // Section 3.3 of paper
+  const outPolys = []
+
 
   const ipsTravelBackwards = intersections[0].polygonEdge.originalIndex < intersections[1].polygonEdge.originalIndex
   console.log(ipsTravelBackwards)
-  // // Section 3.3 of paper
-  const outPolys = []
+
 
   let numberOutPolygons = intersections.length > 2 ? (intersections.length / 2) + 1 : 2
   for (let i = 0; i <= numberOutPolygons; i++) {
