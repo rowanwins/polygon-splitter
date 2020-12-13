@@ -1,29 +1,21 @@
+let ip = 0
+
 export class IntersectionPoint {
 
-  constructor(p, edge1, edge2, isPolylineHeadingIn) {
+  constructor(p, edge1, edge2) {
     this.p = p
     this.polylineEdge = edge1
     this.polygonEdge = edge2
-    this.isPolylineHeadingIn = isPolylineHeadingIn
+    this.isPolylineHeadingIn = isEven(ip)
     this.visited = false
-    this.nextIntersection = null
-    
-    this.to = this.calculateTo()
-    this.from = this.calculateFrom()
-  }
+    this.pair = null
+    this.ip = ip
+    ip = ip + 1
 
-  isEqualTo(otherPoint) {
-    return this.p[0] === otherPoint.p[0] && this.p[1] === otherPoint.p[1]
+    this.polygonEdge.intersectionPoints.push(this)
   }
+}
 
-  calculateTo() {
-    if (this.isPolylineHeadingIn) return this.polylineEdge.p2
-    else return this.polylineEdge.p1
-  }
-
-  calculateFrom() {
-    if (this.isPolylineHeadingIn) return this.polylineEdge.p1
-    else return this.polylineEdge.p2
-  }
-
+function isEven(n) {
+  return n % 2 === 0
 }

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-const data = require('../../test/harness/sample.geojson')
+const data = require('../../test/harness/diamond-hole.geojson')
 import splitPoly from '../../src/index'
 
 import L from 'leaflet'
@@ -26,7 +26,9 @@ export default {
   name: 'app',
   mounted () {
 
-    const layer = L.geoJSON(data)
+    const layer = L.geoJSON(data, {
+      weight: 10
+    })
 
     let map = window.map = L.map('map', {
       crs: L.CRS.Simple
@@ -34,7 +36,13 @@ export default {
 
     layer.addTo(map)
 
-    splitPoly(data.features[0], data.features[1])
+    const out = splitPoly(data.features[0], data.features[1])
+    console.log(JSON.stringify(out))
+    L.geoJSON(out, {
+      fillOpacity: 0,
+      weight: 3,
+      color: '#1bfa06'
+    }).addTo(map)
 
   },
   methods: {

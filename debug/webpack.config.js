@@ -1,10 +1,15 @@
+const path = require('path')
 const webpack = require('webpack')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
-    entry: './debug/src/main.js',
+    context: path.resolve(__dirname),
+    mode: 'development',
+    entry: { 
+        index: path.resolve(__dirname, "src", "main.js")
+    },
     output: {
-        path: __dirname,
+        path: path.resolve(__dirname),
         publicPath: '/debug/',
         filename: 'build.js'
     },
@@ -24,10 +29,16 @@ module.exports = {
                 ],
             },
             {
-                test: /\.css$/,
+                test: /\.(scss|css)$/,
                 use: [
+                    'style-loader',
                     'vue-style-loader',
-                    'css-loader'
+                    {
+                        loader: 'css-loader',
+                        options: {
+                          esModule: false
+                        }
+                      }
                 ]
             }, {
                 test: /\.vue$/,
@@ -40,14 +51,13 @@ module.exports = {
     ],
     devServer: {
         historyApiFallback: true,
-        noInfo: true,
+        open: true,
         overlay: true,
         openPage: 'debug/index.html'
     },
     performance: {
         hints: false
-    },
-    devtool: '#eval-source-map'
+    }
 }
 
 if (process.env.NODE_ENV === 'production') {

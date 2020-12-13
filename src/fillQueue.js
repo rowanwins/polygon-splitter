@@ -3,7 +3,7 @@ import {Point} from './Point'
 
 export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, polygonEdgeQueue) {
   var i, ii, j, polygonSet, p1, p2, e = null
-
+  let edgeCount = 0
   const linegeom = line.type === 'Feature' ? line.geometry : line
 
   let linecoords = linegeom.coordinates
@@ -14,7 +14,7 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, pol
     p2 = new Point(linecoords[i + 1])
     p1.nextPoint = p2
     p2.prevPoint = p1
-    lineEdges.push(new Edge(p1, p2, 'polyline', i))
+    lineEdges.push(new Edge(p1, p2, 'polyline', edgeCount))
 
     polylineBbox[0] = Math.min(polylineBbox[0], p1.p[0])
     polylineBbox[1] = Math.min(polylineBbox[1], p1.p[1])
@@ -22,6 +22,7 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, pol
     polylineBbox[3] = Math.max(polylineBbox[3], p1.p[1])
 
     p1 = p2
+    edgeCount = edgeCount + 1
   }
 
   polylineBbox[0] = Math.min(polylineBbox[0], linecoords[lineLength][0])
@@ -40,23 +41,19 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, pol
     const tempArray = []
     p1 = new Point(polygonSet[0])
     tempArray.push(p1)
-
     for (j = 1; j < polygonSet.length; j++) {
       p2 = new Point(polygonSet[j])
       p1.nextPoint = p2
       p2.prevPoint = p1
 
-      e = new Edge(p1, p2, 'polygon', j - 1)
+      e = new Edge(p1, p2, 'polygon', edgeCount)
       e.intersectPolylineBbox = edgeIntersectsBbox(e, polylineBbox)
       polyEdges.push(e)
       polygonEdgeQueue.push(e)
 
       p1 = p2
+      edgeCount = edgeCount + 1
     }
-    e = new Edge(p1, tempArray[0], 'polygon', j - 1)
-    e.intersectPolylineBbox = edgeIntersectsBbox(e, polylineBbox)
-    polyEdges.push(e)
-    polygonEdgeQueue.push(e)
 
     p2.nextPoint = tempArray[0]
     tempArray[0].prevPoint = p2.prevPoint

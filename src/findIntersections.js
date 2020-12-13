@@ -1,48 +1,29 @@
-
 import {IntersectionPoint} from './IntersectionPoint'
-import {compareIpLocations} from './compareEdges'
-// export function findEdgesWithPossibleIntersections(polyQueue, polylineBbox, nonIntersectingEdge, potentialIntersectingEdges) {
-//   while (polyQueue.length) {
-//     const edge = polyQueue.pop()
-//     edgeIntersectsBbox(edge, polylineBbox) ? potentialIntersectingEdges.push(edge) : nonIntersectingEdge.push(edge) //eslint-disable-line
-//   }
-// }
 
 export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoints) {
   let i, ii, iii
   let count = lineEdges.length
   let polyCount = polygonEdges.length
-  let countIntersections = 0
 
   for (i = 0; i < count; i++) {
     let lineEdge = lineEdges[i]
-    let ipOnLineSegment = 0
     for (ii = 0; ii < polyCount; ii++) {
       const potentialEdge = polygonEdges[ii]
       if (!potentialEdge.intersectPolylineBbox) continue
 
-      // if (potentialEdge.maxX < lineEdge.minX || potentialEdge.minX > lineEdge.maxX) continue
-      // if (potentialEdge.maxY < lineEdge.minY || potentialEdge.minY > lineEdge.maxY) continue
+      if (potentialEdge.maxX < lineEdge.minX || potentialEdge.minX > lineEdge.maxX) continue
+      if (potentialEdge.maxY < lineEdge.minY || potentialEdge.minY > lineEdge.maxY) continue
       const intersection = getEdgeIntersection(lineEdge, potentialEdge)
       if (intersection !== null) {
         for (iii = 0; iii < intersection.length; iii++) {
-          var ip = new IntersectionPoint(intersection[iii], lineEdge, potentialEdge, isEven(countIntersections))
-          countIntersections = countIntersections + 1
-          if (ipOnLineSegment > 0 && compareIpLocations(intersection[iii], intersectingPoints[intersectingPoints.length - 1].p, lineEdge.p1.p)) {
-            intersectingPoints.splice(intersectingPoints.length - 1, 0, ip)
-          } else {
-            intersectingPoints.push(ip)
-          }
-          ipOnLineSegment++
+          var ip = new IntersectionPoint(intersection[iii], lineEdge, potentialEdge)
+          intersectingPoints.push(ip)
+
         }
       }
     }
   }
 
-}
-
-function isEven(n) {
-  return n % 2 === 0
 }
 
 var EPSILON = 1e-9
@@ -116,11 +97,3 @@ export function getEdgeIntersection(lineEdge, potentialEdge, noEndpointTouch) {
 
   return null
 }
-
-// function edgeIntersectsBbox(edge, bbox) {
-//   if (edge.maxX < bbox[0]) return false
-//   if (edge.minX > bbox[2]) return false
-//   if (edge.maxY < bbox[1]) return false
-//   if (edge.minY > bbox[3]) return false
-//   return true
-// }

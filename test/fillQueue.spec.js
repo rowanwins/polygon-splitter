@@ -8,15 +8,17 @@ const TinyQueue = require('tinyqueue')
 
 const polyqueue = new TinyQueue(null, compareEdges)
 const polylineBbox = [Infinity, Infinity, -Infinity, -Infinity]
-
+const lineEdges = []
+const polyEdges = []
 const harness = load.sync(path.join(__dirname, 'harness', 'diamond.geojson'))
 
 fillQueue(
   harness.features[0].geometry.coordinates,
   harness.features[1].geometry.coordinates,
-  polyqueue,
-  linequeue,
-  polylineBbox
+  polyEdges,
+  lineEdges,
+  polylineBbox,
+  polyqueue
 )
 
 test('Fill Queue sorts polygon segments correctly', t => {
@@ -32,7 +34,7 @@ test('Fill Queue sorts polygon segments correctly', t => {
 })
 
 test('Fill queue sorts polyline segments correctly', t => {
-  t.is(linequeue.length, 2)
+  t.is(lineEdges.length, 2)
 })
 
 test('Bounding Box of line is correct', t => {
