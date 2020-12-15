@@ -1,4 +1,6 @@
 import {IntersectionPoint} from './IntersectionPoint'
+import {orient2d} from 'robust-predicates';
+import { polygon, polyline } from 'leaflet'
 
 export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoints) {
   let i, ii, iii
@@ -7,23 +9,38 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
 
   for (i = 0; i < count; i++) {
     let lineEdge = lineEdges[i]
-    for (ii = 0; ii < polyCount; ii++) {
-      const potentialEdge = polygonEdges[ii]
-      if (!potentialEdge.intersectPolylineBbox) continue
 
-      if (potentialEdge.maxX < lineEdge.minX || potentialEdge.minX > lineEdge.maxX) continue
-      if (potentialEdge.maxY < lineEdge.minY || potentialEdge.minY > lineEdge.maxY) continue
-      const intersection = getEdgeIntersection(lineEdge, potentialEdge)
+    for (ii = 0; ii < polyCount; ii++) {
+      const polygonEdge = polygonEdges[ii]
+      if (!polygonEdge.intersectPolylineBbox) continue
+
+      if (polygonEdge.maxX < lineEdge.minX || polygonEdge.minX > lineEdge.maxX) continue
+      if (polygonEdge.maxY < lineEdge.minY || polygonEdge.minY > lineEdge.maxY) continue
+      const intersection = getEdgeIntersection(lineEdge, polygonEdge)
       if (intersection !== null) {
         for (iii = 0; iii < intersection.length; iii++) {
-          var ip = new IntersectionPoint(intersection[iii], lineEdge, potentialEdge)
+          const isHeadingIn = orient2d(polygonEdge.p1.p[0], polygonEdge.p1.p[1], polygonEdge.p2.p[0], polygonEdge.p2.p[1], lineEdge.p1.p[0], lineEdge.p1.p[1])
+          var ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0)
           intersectingPoints.push(ip)
-
         }
       }
     }
   }
+  lineEdges.forEach(function (edge) {
+    edge.intersectionPoints.sort(function (a, b) {
+      if (a.distanceFromPolylineEdgeStart > b.distanceFromPolylineEdgeStart) {
+        return 1
+      } else if (b.distanceFromPolylineEdgeStart > a.distanceFromPolylineEdgeStart) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+  })
 
+  intersectingPoints.forEach(function (ip, idx) {
+    ip.ip = idx
+  })
 }
 
 var EPSILON = 1e-9

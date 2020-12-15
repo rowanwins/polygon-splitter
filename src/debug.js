@@ -28,11 +28,18 @@ export function _debugIntersectionPoints(points) {
   })
 }
 
-export function _debugCandidatePoly(coords) {
+export function _debugCandidatePoly(outPolys) {
   if (process.env.NODE_ENV !== 'development') return
   const map = window.map
   const pLayerGroup = L.layerGroup([]).addTo(map)
-  var polygon = L.polygon(coords.map(c => [c[1], c[0]]), {color: 'red'}).addTo(pLayerGroup)
+  L.geoJSON({
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [outPolys]
+    }
+  }, {color: 'red'}).addTo(pLayerGroup)
   // L.circleMarker([startDot.p[1], startDot.p[0]], {
   //   color: 'green'
   // }).addTo(pLayerGroup)
