@@ -1,3 +1,4 @@
+let index = 0
 export class IntersectionPoint {
 
   constructor(p, edge1, edge2, isHeadingIn) {
@@ -5,18 +6,16 @@ export class IntersectionPoint {
     this.polylineEdge = edge1
     this.polygonEdge = edge2
     this.isHeadingIn = isHeadingIn
-    this.pair = null
 
     this.distanceFromPolylineEdgeStart = distance(this.polylineEdge.p1.p, this.p)
+    this.distanceFromPolygonEdgeStart = distance(this.polygonEdge.p1.p, this.p)
 
     this.polygonEdge.intersectionPoints.push(this)
     this.polylineEdge.intersectionPoints.push(this)
 
     this.visitCount = 0
-  }
-
-  setOrderInfo(ip) {
-    this.ip = ip
+    this.ip = index
+    index = index + 1
   }
 }
 

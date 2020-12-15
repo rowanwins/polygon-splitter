@@ -1,46 +1,42 @@
+import {orient2d} from 'robust-predicates'
 import {IntersectionPoint} from './IntersectionPoint'
-import {orient2d} from 'robust-predicates';
-import { polygon, polyline } from 'leaflet'
 
 export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoints) {
   let i, ii, iii
-  let count = lineEdges.length
-  let polyCount = polygonEdges.length
+  let lineEdgeCount = lineEdges.length
+  let polyEdgeCount = polygonEdges.length
 
-  for (i = 0; i < count; i++) {
+  for (i = 0; i < lineEdgeCount; i++) {
     let lineEdge = lineEdges[i]
 
-    for (ii = 0; ii < polyCount; ii++) {
+    for (ii = 0; ii < polyEdgeCount; ii++) {
       const polygonEdge = polygonEdges[ii]
-      if (!polygonEdge.intersectPolylineBbox) continue
 
-      if (polygonEdge.maxX < lineEdge.minX || polygonEdge.minX > lineEdge.maxX) continue
-      if (polygonEdge.maxY < lineEdge.minY || polygonEdge.minY > lineEdge.maxY) continue
-      const intersection = getEdgeIntersection(lineEdge, polygonEdge)
-      if (intersection !== null) {
-        for (iii = 0; iii < intersection.length; iii++) {
+      if (!polygonEdge.intersectPolylineBbox) continue
+      else if (polygonEdge.maxX < lineEdge.minX || polygonEdge.minX > lineEdge.maxX) continue
+      else if (polygonEdge.maxY < lineEdge.minY || polygonEdge.minY > lineEdge.maxY) continue
+
+      const intersections = getEdgeIntersections(lineEdge, polygonEdge)
+      if (intersections !== null) {
+        for (iii = 0; iii < intersections.length; iii++) {
           const isHeadingIn = orient2d(polygonEdge.p1.p[0], polygonEdge.p1.p[1], polygonEdge.p2.p[0], polygonEdge.p2.p[1], lineEdge.p1.p[0], lineEdge.p1.p[1])
-          var ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0)
-          intersectingPoints.push(ip)
+          intersectingPoints.push(new IntersectionPoint(intersections[iii], lineEdge, polygonEdge, isHeadingIn > 0))
         }
       }
     }
   }
-  lineEdges.forEach(function (edge) {
-    edge.intersectionPoints.sort(function (a, b) {
-      if (a.distanceFromPolylineEdgeStart > b.distanceFromPolylineEdgeStart) {
-        return 1
-      } else if (b.distanceFromPolylineEdgeStart > a.distanceFromPolylineEdgeStart) {
-        return -1
-      } else {
-        return 0
-      }
+  for (i = 0; i < lineEdgeCount; i++) {
+    let lineEdge = lineEdges[i]
+    lineEdge.intersectionPoints.sort(function (a, b) {
+      return a.distanceFromPolylineEdgeStart - b.distanceFromPolylineEdgeStart
     })
-  })
-
-  intersectingPoints.forEach(function (ip, idx) {
-    ip.ip = idx
-  })
+  }
+  for (i = 0; i < polyEdgeCount; i++) {
+    let polyEdge = polygonEdges[i]
+    polyEdge.intersectionPoints.sort(function (a, b) {
+      return a.distanceFromPolygonEdgeStart - b.distanceFromPolygonEdgeStart
+    })
+  }
 }
 
 var EPSILON = 1e-9
@@ -60,7 +56,7 @@ function toPoint(p, s, d) {
   ]
 }
 
-export function getEdgeIntersection(lineEdge, potentialEdge, noEndpointTouch) {
+export function getEdgeIntersections(lineEdge, potentialEdge, noEndpointTouch) {
   var va = [lineEdge.p2.p[0] - lineEdge.p1.p[0], lineEdge.p2.p[1] - lineEdge.p1.p[1]]
   var vb = [potentialEdge.p2.p[0] - potentialEdge.p1.p[0], potentialEdge.p2.p[1] - potentialEdge.p1.p[1]]
 
