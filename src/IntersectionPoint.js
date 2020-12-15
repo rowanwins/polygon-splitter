@@ -8,6 +8,7 @@ export class IntersectionPoint {
     this.pair = null
 
     this.distanceFromPolylineEdgeStart = distance(this.polylineEdge.p1.p, this.p)
+    this.distanceFromPolygonEdgeStart = distance(this.polygonEdge.p1.p, this.p)
 
     this.polygonEdge.intersectionPoints.push(this)
     this.polylineEdge.intersectionPoints.push(this)

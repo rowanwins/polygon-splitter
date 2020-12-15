@@ -28,13 +28,13 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
   }
   lineEdges.forEach(function (edge) {
     edge.intersectionPoints.sort(function (a, b) {
-      if (a.distanceFromPolylineEdgeStart > b.distanceFromPolylineEdgeStart) {
-        return 1
-      } else if (b.distanceFromPolylineEdgeStart > a.distanceFromPolylineEdgeStart) {
-        return -1
-      } else {
-        return 0
-      }
+      return a.distanceFromPolylineEdgeStart - b.distanceFromPolylineEdgeStart
+    })
+  })
+
+  polygonEdges.forEach(function (edge) {
+    edge.intersectionPoints.sort(function (a, b) {
+      return a.distanceFromPolygonEdgeStart - b.distanceFromPolygonEdgeStart
     })
   })
 

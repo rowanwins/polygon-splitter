@@ -78,6 +78,12 @@ export default function (polygon, line) {
   }
 }
 
+function findNextIp(intersection, intersections) {
+  for (let index = 0; index < intersections.length; index++) {
+    const int = intersections[index]
+    if (int === intersection) return intersections[index + 1]
+  }
+}
 
 function walkPolygonForwards(intersectionPoint, outPoly) {
   console.log('polygon going forwards', intersectionPoint)
@@ -85,9 +91,10 @@ function walkPolygonForwards(intersectionPoint, outPoly) {
   if (nextEdge.intersectionPoints.length > 1) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
     if (lastPointOnEdge !== intersectionPoint) {
-      outPoly.push(nextEdge.intersectionPoints[1].p)
-      nextEdge.intersectionPoints[1].visitCount = nextEdge.intersectionPoints[1].visitCount + 1
-      return nextEdge.intersectionPoints[1]
+      const nextIp = findNextIp(intersectionPoint, nextEdge.intersectionPoints)
+      outPoly.push(nextIp.p)
+      nextIp.visitCount = nextIp.visitCount + 1
+      return nextIp
     }
   }
   let condition = true
