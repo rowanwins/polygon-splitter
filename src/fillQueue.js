@@ -1,7 +1,7 @@
 import {Edge} from './Edge'
 import {Point} from './Point'
 
-export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, polygonEdgeQueue) {
+export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox) {
   var i, ii, j, polygonSet, p1, p2, e = null
   let edgeCount = 0
   const linegeom = line.type === 'Feature' ? line.geometry : line
@@ -61,7 +61,6 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox, pol
       if (i > 0) e.interiorRing = true
       e.intersectPolylineBbox = edgeIntersectsBbox(e, polylineBbox)
       polyEdges.push(e)
-      polygonEdgeQueue.push(e)
 
       p1 = p2
       edgeCount = edgeCount + 1

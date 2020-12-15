@@ -54,7 +54,6 @@
     "webpack-dev-server": "^4.0.0-beta.0"
   },
   "dependencies": {
-    "robust-predicates": "^2.0.4",
-    "tinyqueue": "^1.2.3"
+    "robust-predicates": "^2.0.4"
   }
 }

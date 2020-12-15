@@ -1,6 +1,3 @@
-import TinyQueue from 'tinyqueue'
-
-import {compareEdges} from './compareEdges'
 import {fillQueue} from './fillQueue'
 import {findIntersectionPoints} from './findIntersections.js'
 import { _debugCandidatePoly, _debugLinePoints } from './debug'
@@ -9,19 +6,12 @@ export default function (polygon, line) {
   const intersections = []
   const polygonEdges = []
   const polylineEdges = []
-  const polygonEdgeQueue = new TinyQueue(null, compareEdges)
   const polylineBbox = [Infinity, Infinity, Infinity, Infinity]
 
-  fillQueue(polygon, line, polygonEdges, polylineEdges, polylineBbox, polygonEdgeQueue)
-  const sortedPolygonEdges = []
-  while (polygonEdgeQueue.length) sortedPolygonEdges.push(polygonEdgeQueue.pop())
+  fillQueue(polygon, line, polygonEdges, polylineEdges, polylineBbox)
 
   findIntersectionPoints(polygonEdges, polylineEdges, intersections)
 
-  for (var i = 0; i < intersections.length; i++) {
-    if (i % 2 === 0) intersections[i].pair = intersections[i + 1]
-    else intersections[i].pair = intersections[i - 1]
-  }
   // console.log(intersections)
 
   const outPolys = []
