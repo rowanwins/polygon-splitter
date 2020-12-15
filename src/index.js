@@ -45,8 +45,7 @@ export default function (polygon, line) {
   while (firstPolyStart !== nextPolyStart) {
 
     polyStart.visitCount = polyStart.visitCount + 1
-    // We've done all the output polys on the right of the line entry,
-    // This kicks us back to the remaining left one
+
     if (nextPolyStart.visitCount > 2) {
       let unvisitedPolyFound = false
       for (let index = 0; index < intersections.length; index++) {
@@ -65,47 +64,17 @@ export default function (polygon, line) {
 
     polyStart.visitCount = polyStart.visitCount + 1
     nextIntersection = walkPolygonForwards(polyStart, outPoly, intersections)
-    // _debugCandidatePoly(outPolys)
     nextPolyStart = nextIntersection
 
     const methodForPolyline = nextIntersection.isHeadingIn ? walkPolylineForwards : walkPolylineBackwards
 
     while (nextIntersection !== polyStart) {
       nextIntersection = methodForPolyline(nextIntersection, outPoly, intersections)
-      // _debugCandidatePoly(outPolys)
       if (nextIntersection !== polyStart) {
         nextIntersection = walkPolygonForwards(nextIntersection, outPoly, intersections)
-        // _debugCandidatePoly(outPolys)
       }
     }
-    // console.log(nextPolyStart, firstPolyStart)
-    // _debugCandidatePoly(outPolys)
     polyStart = nextPolyStart
-    // nextPolyStart = firstPolyStart
-
-
-    // if (nextIntersection === polyStart) {
-    //   polyStart = nextPolyStart
-    // } else {
-    //   nextIntersection = methodForPolyline(nextIntersection, outPoly, intersections)
-    //   _debugCandidatePoly(outPolys)
-    // }
-
-    // // We could well have an output by now
-    // if (nextIntersection === polyStart) {
-    //   polyStart = nextPolyStart
-    // } else {
-    //   nextIntersection = walkPolygonForwards(nextIntersection, outPoly, intersections)
-    //   _debugCandidatePoly(outPolys)
-    // }
-
-    // if (nextIntersection === polyStart) {
-    //   polyStart = nextPolyStart
-    // } else {
-    //   nextIntersection = methodForPolyline(nextIntersection, outPoly, intersections)
-    //   _debugCandidatePoly(outPolys)
-    //   polyStart = nextPolyStart
-    // }
   }
 
 
