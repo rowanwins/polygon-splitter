@@ -16,8 +16,6 @@ export default function (polygon, line) {
 
   const outPolys = []
 
-
-
   // Start by rewiring from the first intersection point along out line
   let firstPolyStart = null
   for (let index = 0; index < polylineEdges.length; index++) {
@@ -55,16 +53,20 @@ export default function (polygon, line) {
     polyStart.visitCount = polyStart.visitCount + 1
     nextIntersection = walkPolygonForwards(polyStart, outPoly, intersections)
     nextPolyStart = nextIntersection
-
+    // _debugCandidatePoly(outPolys)
+    console.log(nextIntersection)
     const methodForPolyline = nextIntersection.isHeadingIn ? walkPolylineForwards : walkPolylineBackwards
-
+    console.log(methodForPolyline)
     while (nextIntersection !== polyStart) {
       nextIntersection = methodForPolyline(nextIntersection, outPoly, intersections)
+      // _debugCandidatePoly(outPolys)
+
       if (nextIntersection !== polyStart) {
         nextIntersection = walkPolygonForwards(nextIntersection, outPoly, intersections)
       }
     }
     polyStart = nextPolyStart
+    // _debugCandidatePoly(outPolys)
   }
 
 
@@ -86,7 +88,7 @@ function findNextIp(intersection, intersections) {
 }
 
 function walkPolygonForwards(intersectionPoint, outPoly) {
-  console.log('polygon going forwards', intersectionPoint)
+  console.log('polygon going forwards')
   let nextEdge = intersectionPoint.polygonEdge
   if (nextEdge.intersectionPoints.length > 1) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
@@ -114,13 +116,17 @@ function walkPolylineBackwards(intersectionPoint, outPoly, intersections) {
   let nextEdge = intersectionPoint.polylineEdge
   if (nextEdge.intersectionPoints.length === 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
+    // debugger
     if (lastPointOnEdge === intersectionPoint) {
       const nextIntersection = nextEdge.intersectionPoints[0]
       outPoly.push(nextIntersection.p)
       nextIntersection.visitCount = nextIntersection.visitCount + 1
       return nextIntersection
     } else {
-      return nextEdge.intersectionPoints[0]
+      // return nextEdge.intersectionPoints[0]
+      outPoly.push(lastPointOnEdge.p)
+      lastPointOnEdge.visitCount = lastPointOnEdge.visitCount + 1
+      return lastPointOnEdge
     }
   } else if (nextEdge.intersectionPoints.length > 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
@@ -154,6 +160,8 @@ function walkPolylineForwards(intersectionPoint, outPoly, intersections) {
   let nextEdge = intersectionPoint.polylineEdge
   if (nextEdge.intersectionPoints.length === 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
+    // debugger
+
     if (lastPointOnEdge === intersectionPoint) {
       const nextIntersection = nextEdge.intersectionPoints[0]
       outPoly.push(nextIntersection.p)
