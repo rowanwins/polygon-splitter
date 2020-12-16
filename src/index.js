@@ -16,7 +16,8 @@ export default function (polygon, line) {
 
   const outPolys = []
 
-  // Start by rewiring from the first intersection point along out line
+  // Start by rewiring from the first intersection point along the polyline line
+  // This step makes a difference (eg see the another.geojson harness file)
   let firstPolyStart = null
   for (let index = 0; index < polylineEdges.length; index++) {
     const pe = polylineEdges[index]
@@ -28,16 +29,13 @@ export default function (polygon, line) {
 
   let polyStart = firstPolyStart
   let nextPolyStart = {visitCount: 0}
-  let nextIntersection
 
   while (firstPolyStart !== nextPolyStart) {
-
-    polyStart.visitCount = polyStart.visitCount + 1
 
     if (nextPolyStart.visitCount > 2) {
       let unvisitedPolyFound = false
       for (let index = 0; index < intersections.length; index++) {
-        const intersection = intersections[index];
+        const intersection = intersections[index]
         if (intersection.visitCount < 2) {
           polyStart = intersection
           unvisitedPolyFound = true
@@ -46,17 +44,18 @@ export default function (polygon, line) {
       }
       if (!unvisitedPolyFound) break
     }
+
+    polyStart.visitCount = polyStart.visitCount + 1
     let outPoly = []
     outPolys.push(outPoly)
     outPoly.push(polyStart.p)
 
     polyStart.visitCount = polyStart.visitCount + 1
-    nextIntersection = walkPolygonForwards(polyStart, outPoly, intersections)
+    let nextIntersection = walkPolygonForwards(polyStart, outPoly, intersections)
     nextPolyStart = nextIntersection
     // _debugCandidatePoly(outPolys)
-    console.log(nextIntersection)
     const methodForPolyline = nextIntersection.isHeadingIn ? walkPolylineForwards : walkPolylineBackwards
-    console.log(methodForPolyline)
+
     while (nextIntersection !== polyStart) {
       nextIntersection = methodForPolyline(nextIntersection, outPoly, intersections)
       // _debugCandidatePoly(outPolys)
