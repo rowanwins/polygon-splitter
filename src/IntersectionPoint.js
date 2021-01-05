@@ -1,10 +1,11 @@
 export class IntersectionPoint {
 
-  constructor(p, edge1, edge2, isHeadingIn) {
+  constructor(p, edge1, edge2, isHeadingIn, count) {
     this.p = p
     this.polylineEdge = edge1
     this.polygonEdge = edge2
     this.isHeadingIn = isHeadingIn
+    this.ip = count
 
     this.distanceFromPolylineEdgeStart = distance(this.polylineEdge.p1.p, this.p)
     this.distanceFromPolygonEdgeStart = distance(this.polygonEdge.p1.p, this.p)

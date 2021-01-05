@@ -3,7 +3,7 @@
 </template>
 
 <script>
-const data = require('../../test/harness/new-test.geojson')
+const data = require('../../test/harness/in/new-test.geojson')
 import splitPoly from '../../src/index'
 
 import L from 'leaflet'

@@ -1,12 +1,11 @@
 import {IntersectionPoint} from './IntersectionPoint'
-import {orient2d} from 'robust-predicates';
-import { polygon, polyline } from 'leaflet'
+import {orient2d} from 'robust-predicates'
 
 export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoints) {
   let i, ii, iii
   let count = lineEdges.length
   let polyCount = polygonEdges.length
-
+  let intersectionCount = 0
   for (i = 0; i < count; i++) {
     let lineEdge = lineEdges[i]
 
@@ -20,8 +19,9 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
       if (intersection !== null) {
         for (iii = 0; iii < intersection.length; iii++) {
           const isHeadingIn = orient2d(polygonEdge.p1.p[0], polygonEdge.p1.p[1], polygonEdge.p2.p[0], polygonEdge.p2.p[1], lineEdge.p1.p[0], lineEdge.p1.p[1])
-          var ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0)
+          var ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0, intersectionCount)
           intersectingPoints.push(ip)
+          intersectionCount = intersectionCount++
         }
       }
     }
@@ -36,10 +36,6 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
     edge.intersectionPoints.sort(function (a, b) {
       return a.distanceFromPolygonEdgeStart - b.distanceFromPolygonEdgeStart
     })
-  })
-
-  intersectingPoints.forEach(function (ip, idx) {
-    ip.ip = idx
   })
 }
 
@@ -68,7 +64,6 @@ export function getEdgeIntersection(lineEdge, potentialEdge, noEndpointTouch) {
   var kross = crossProduct(va, vb)
   var sqrKross = kross * kross
   var sqrLenA  = dotProduct(va, va)
-  var sqrLenB  = dotProduct(vb, vb)
 
   if (sqrKross > 0) {
 

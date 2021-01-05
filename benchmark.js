@@ -1,9 +1,17 @@
 var Suite = require('benchmark').Suite
-var polysplit = require('./dist/polysplit')
+var polygonsplit = require('./dist/polygonsplit')
+const loadJsonFile = require('load-json-file')
+const path = require('path')
+const turf = require('@turf/turf')
 
-new Suite('Single Segment')
-  .add('kwc', () => {
-    polysplit()
+const fixture = loadJsonFile.sync(path.join(__dirname, 'test', 'harness', 'in', 'new-test.geojson'))
+
+new Suite('Benchmark')
+  .add('polygonsplit', () => {
+    polygonsplit(fixture.features[0], fixture.features[1])
+  })
+  .add('alternate-approach', () => {
+    alernateApproach(fixture.features[0], fixture.features[1])
   })
   .on('cycle', function (event) {
     console.log(event.target.toString())
@@ -11,7 +19,14 @@ new Suite('Single Segment')
   .on('error', function (e) {
     throw e.target.error
   })
-  .on('complete', function () {
-    console.log('- Fastest is ' + this.filter('fastest').map('name') + '\n')
-  })
   .run({'async': true})
+
+
+function alernateApproach(poly, line) {
+  const polyAsLine = turf.polygonToLine(poly)
+  const unionedLines = turf.union(polyAsLine, line)
+  const polygonized = turf.polygonize(unionedLines)
+  polygonized['features'].filter(ea => 
+    turf.booleanPointInPolygon(turf.pointOnFeature(ea), poly)
+  )
+}

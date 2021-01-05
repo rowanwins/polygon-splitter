@@ -1,16 +1,32 @@
 import test from 'ava'
+import load from 'load-json-file'
+import write from 'write-json-file'
+import path from 'path'
+import fs from 'fs'
+
 import polySplit from '../src/index'
 
-const load = require('load-json-file')
-const path = require('path')
-const isClockwise = require('@turf/boolean-clockwise').default
+const directories = {
+  in: path.join(__dirname, 'harness', 'in') + path.sep,
+  out: path.join(__dirname, 'harness', 'out') + path.sep
+}
 
-const harness = load.sync(path.join(__dirname, 'harness', 'four-out.geojson'))
-const output = load.sync(path.join(__dirname, 'harness', 'outputs', 'four-out.geojson'))
+const fixtures = fs.readdirSync(directories.in).map(filename => {
+  return {
+    filename,
+    name: path.parse(filename).name,
+    geojson: load.sync(path.join(directories.in, filename))
+  }
+})
 
 test('Find intersection finds potential segments', t => {
-  var out = polySplit(harness.features[0].geometry.coordinates, harness.features[1].geometry.coordinates)
-  t.deepEqual(out, output)
-  t.is(1, 1)
+  fixtures.forEach(fixture => {
+
+    var out = polySplit(fixture.geojson.features[0], fixture.geojson.features[1])
+
+    if (process.env.REGEN) write.sync(path.join(directories.out, fixture.filename), out)
+
+    t.deepEqual(out, load.sync(directories.out + fixture.filename), fixture.name)
+  })
 })
 
