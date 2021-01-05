@@ -1,10 +1,10 @@
 {
-  "name": "polygon-split",
+  "name": "polygon-splitter",
   "version": "0.0.1",
   "description": "Split a polygon using a polyline.",
-  "main": "dist/polygonsplit.js",
-  "module": "src/polygonsplit.es.js",
-  "unpkg": "dist/polygonsplit.min.js",
+  "main": "dist/polygonsplitter.js",
+  "module": "src/polygonsplitter.es.js",
+  "unpkg": "dist/polygonsplitter.min.js",
   "scripts": {
     "bench": "npm run build && node benchmark.js",
     "build": "rollup -c",
@@ -65,6 +65,6 @@
     "geojson",
     "polygon",
     "polyline",
-    "self-intersection"
+    "split"
   ]
 }

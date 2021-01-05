@@ -5,7 +5,7 @@ import {nodeResolve} from '@rollup/plugin-node-resolve'
 const output = (file, format, plugins) => ({
   input: './src/index.js',
   output: {
-    name: 'polygonsplit',
+    name: 'polygonsplitter',
     file,
     format,
     exports: 'default'
@@ -14,7 +14,7 @@ const output = (file, format, plugins) => ({
 })
 
 export default [
-  output('./dist/polygonsplit.js', 'umd', [nodeResolve(), commonjs()]),
-  output('./dist/polygonsplit.min.js', 'umd', [nodeResolve(), commonjs(), terser()]),
-  output('./dist/polygonsplit.es.js', 'es', [nodeResolve(), commonjs()])
+  output('./dist/polygonsplitter.js', 'umd', [nodeResolve(), commonjs()]),
+  output('./dist/polygonsplitter.min.js', 'umd', [nodeResolve(), commonjs(), terser()]),
+  output('./dist/polygonsplitter.es.js', 'es', [nodeResolve(), commonjs()])
 ]

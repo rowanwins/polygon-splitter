@@ -1,37 +1,44 @@
-## polygon-split
-A small (<10kb minified) javascript library for splitting polygons by a polyline.
+## polygon-splitter
+A small (<10kb minified) javascript library for splitting geojson polygons by a polyline.
 
 Works with
 - Concave polygons
 - Polygons with holes
+- Single & Multi-part geometries
 
+### Install
+````
+npm install polygon-splitter
+````
 
 ### API
 Accepts either a geojson `Feature` or `Geometry` (inc `MultiPolygon` and `MultiLineString`).
 
 ```js
-import polygonSplit from 'polygon-split'
+import polygonSplitter from 'polygon-splitter'
 // or
-const polgonSplit = require('polygon-split')
+const polygonSplitter = require('polygon-splitter')
 
 const polygon = {
     "type": "Polygon",
     "coordinates": [[[0, 0],[10, -10], [20, 0], [10, 10], [0, 0]]]
 }
+
 const polyline = {
     "type": "LineString",
     "coordinates": [[20, 10], [5, 0], [20, -10]]
 }
-const output = polygonSplit(polygon, polyline)
+const output = polygonSplitter(polygon, polyline)
 ```
 
 ### Performance
 
 Splitting a polygon with a hole into 4 pieces.
-Compared with an approach [outlined here](http://kuanbutts.com/2020/07/07/subdivide-polygon-with-linestring/).
+Compared with an approach [outlined here](http://kuanbutts.com/2020/07/07/subdivide-polygon-with-linestring/), and also another [one described here](https://gis.stackexchange.com/a/344277)
 ````
-polygonsplit x 228,391 ops/sec ±0.63% (88 runs sampled)
+polygon-splitter x 228,391 ops/sec ±0.63% (88 runs sampled)
 alternate approach x 2,052 ops/sec ±3.60% (78 runs sampled)
+alternate approach 2 x 900 ops/sec ±3.60% (78 runs sampled)
 ````
 
 ### Describing the algorithm
@@ -45,4 +52,5 @@ Some key points of understanding
 
 ### Acknowledgements
 Thanks to mourner for the most excellent [robust-predicates library](https://github.com/mourner/robust-predicates).
+
 Thanks for my employer [FrontierSI](http://frontiersi.com.au/) for freeing up some of my time to finish off this algorithm.
