@@ -1,4 +1,5 @@
 node_modules
 coverage
 .nyc_output
-.PolylineClipping.pdf
+package-lock.json
+dist/
