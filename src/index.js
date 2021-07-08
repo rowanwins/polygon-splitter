@@ -1,6 +1,6 @@
 import {fillQueue} from './fillQueue'
 import {findIntersectionPoints} from './findIntersections.js'
-// import { _debugCandidatePoly, _debugLinePoints } from './debug'
+// import { _debugCandidatePoly, _debugLinePoints, _debugIntersectionPoints, _debugPolyStart } from './debug'
 
 export default function (polygon, line) {
   const intersections = []
@@ -11,9 +11,8 @@ export default function (polygon, line) {
   fillQueue(polygon, line, polygonEdges, polylineEdges, polylineBbox)
 
   findIntersectionPoints(polygonEdges, polylineEdges, intersections)
-
   const outPolys = []
-
+  // _debugIntersectionPoints(intersections)
   // Start the rewiring of the outputs from the first intersection point along the polyline line
   // This step makes a difference (eg see the another.geojson harness file)
   let firstPolyStart = null
@@ -26,15 +25,16 @@ export default function (polygon, line) {
   }
 
   let polyStart = firstPolyStart
-  let nextPolyStart = {visitCount: 0}
-
+  let nextPolyStart = {visitCount: 1}
   // Basically we're going to walk our way around the outside of the polygon
   // to find new output polygons until we get back to the beginning
   while (firstPolyStart !== nextPolyStart) {
 
-    // If we've already visited this intersection point a couple of times we've 
+    // If we've already visited this intersection point a couple of times we've
     // already used it in it's two output polygons
-    if (nextPolyStart.visitCount > 2) {
+    // _debugPolyStart(polyStart)
+
+    if (nextPolyStart.visitCount >= 2) {
       let unvisitedPolyFound = false
       for (let index = 0; index < intersections.length; index++) {
         const intersection = intersections[index]
@@ -74,6 +74,21 @@ export default function (polygon, line) {
       if (nextIntersection !== polyStart) {
         nextIntersection = walkPolygonForwards(nextIntersection, outPoly, intersections)
         // _debugCandidatePoly(outPolys)
+      }
+    }
+
+    if (nextPolyStart.visitCount >= 2) {
+      let unvisitedPolyFound = false
+      for (let index = 0; index < intersections.length; index++) {
+        const intersection = intersections[index]
+        if (intersection.visitCount < 2) {
+          polyStart = intersection
+          unvisitedPolyFound = true
+          break
+        }
+      }
+      if (unvisitedPolyFound) {
+        nextPolyStart = polyStart
       }
     }
 

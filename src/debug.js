@@ -2,30 +2,39 @@ export function _debugIntersectionPoints(points) {
   if (process.env.NODE_ENV !== 'development') return
   const map = window.map
   const pLayerGroup = L.layerGroup([]).addTo(map)
-  L.NumberedDivIcon = createNumberDiv()
 
-  points.forEach(function (p, index) {
-    L.marker([p.p[1], p.p[0]], {
-      icon: new L.NumberedDivIcon({
-        number: index.toString()
-      })
+  points.forEach(function (p) {
+    L.circleMarker([p.p[1], p.p[0]], {
+      color: 'red'
     }).addTo(pLayerGroup)
 
-    L.marker([p.to.p[1], p.to.p[0]], {
-      icon: new L.NumberedDivIcon({
-        number: 'to'
-      })
-    }).addTo(pLayerGroup)
+    // L.marker([p.to.p[1], p.to.p[0]], {
+    //   icon: new L.NumberedDivIcon({
+    //     number: 'to'
+    //   })
+    // }).addTo(pLayerGroup)
 
-    L.marker([p.from.p[1], p.from.p[0]], {
-      icon: new L.NumberedDivIcon({
-        number: 'from'
-      })
-    }).addTo(pLayerGroup)
-
-    debugger
-    pLayerGroup.clearLayers()
+    // L.marker([p.from.p[1], p.from.p[0]], {
+    //   icon: new L.NumberedDivIcon({
+    //     number: 'from'
+    //   })
+    // }).addTo(pLayerGroup)
   })
+  debugger
+  pLayerGroup.clearLayers()
+}
+
+export function _debugPolyStart(polyStart) {
+  if (process.env.NODE_ENV !== 'development') return
+  const map = window.map
+  const pLayerGroup = L.layerGroup([]).addTo(map)
+
+  L.circleMarker([polyStart.p[1], polyStart.p[0]], {
+    color: 'grey'
+  }).addTo(pLayerGroup)
+
+  debugger
+  pLayerGroup.clearLayers()
 }
 
 export function _debugCandidatePoly(outPolys) {

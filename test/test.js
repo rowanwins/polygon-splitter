@@ -21,7 +21,6 @@ const fixtures = fs.readdirSync(directories.in).map(filename => {
 
 test('Find intersection finds potential segments', t => {
   fixtures.forEach(fixture => {
-
     var out = polySplit(fixture.geojson.features[0], fixture.geojson.features[1])
 
     if (process.env.REGEN) write.sync(path.join(directories.out, fixture.filename), out)

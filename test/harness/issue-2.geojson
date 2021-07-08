@@ -1,0 +1,63 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              2.5,
+              2.5
+            ],
+            [
+              2.5,
+              7.5
+            ],
+            [
+              7.5,
+              7.5
+            ],
+            [
+              7.5,
+              2.5
+            ],
+            [
+              2.5,
+              2.5
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {"type":"LineString","coordinates":[[5,11],[5,-1]]}
+    }
+  ]
+}
