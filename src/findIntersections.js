@@ -21,7 +21,7 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
           const isHeadingIn = orient2d(polygonEdge.p1.p[0], polygonEdge.p1.p[1], polygonEdge.p2.p[0], polygonEdge.p2.p[1], lineEdge.p1.p[0], lineEdge.p1.p[1])
           var ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0, intersectionCount)
           intersectingPoints.push(ip)
-          intersectionCount = intersectionCount++
+          intersectionCount = intersectionCount + 1
         }
       }
     }

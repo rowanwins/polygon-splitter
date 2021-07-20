@@ -68,7 +68,7 @@ export default function (polygon, line) {
     // However it can contain many stretches of each
     // So we walk continually from polyline to polygon collecting the output
     while (nextIntersection !== polyStart) {
-      nextIntersection = methodForPolyline(nextIntersection, outPoly, intersections)
+      nextIntersection = methodForPolyline(nextIntersection, outPoly)
       // _debugCandidatePoly(outPolys)
 
       if (nextIntersection !== polyStart) {
@@ -109,12 +109,12 @@ export default function (polygon, line) {
 
 // Walk around the polygon collecting vertices
 function walkPolygonForwards(intersectionPoint, outPoly) {
-  // console.log('polygon going forwards')
   let nextEdge = intersectionPoint.polygonEdge
   if (nextEdge.intersectionPoints.length > 1) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
     if (lastPointOnEdge !== intersectionPoint) {
-      const nextIp = findNextIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
+      let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
+      let nextIp = nextEdge.intersectionPoints[currentIndex + 1]
       outPoly.push(nextIp.p)
       nextIp.visitCount = nextIp.visitCount + 1
       return nextIp
@@ -133,15 +133,15 @@ function walkPolygonForwards(intersectionPoint, outPoly) {
 }
 
 // Given a set of intersections find the next one
-function findNextIntersectionPoint(intersection, intersections) {
+function findIndexOfIntersectionPoint(intersection, intersections) {
   for (let index = 0; index < intersections.length; index++) {
     const int = intersections[index]
-    if (int === intersection) return intersections[index + 1]
+    if (int === intersection) return index
   }
 }
 
 
-function walkPolylineBackwards(intersectionPoint, outPoly, intersections) {
+function walkPolylineBackwards(intersectionPoint, outPoly) {
   let nextEdge = intersectionPoint.polylineEdge
   if (nextEdge.intersectionPoints.length === 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
@@ -159,7 +159,8 @@ function walkPolylineBackwards(intersectionPoint, outPoly, intersections) {
   } else if (nextEdge.intersectionPoints.length > 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
     if (lastPointOnEdge === intersectionPoint) {
-      const nextIntersection = intersections[intersectionPoint.ip - 1]
+      let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
+      let nextIntersection = nextEdge.intersectionPoints[currentIndex - 1]
       outPoly.push(nextIntersection.p)
       nextIntersection.visitCount = nextIntersection.visitCount + 1
       return nextIntersection
@@ -183,7 +184,7 @@ function walkPolylineBackwards(intersectionPoint, outPoly, intersections) {
   return lastIntersection
 }
 
-function walkPolylineForwards(intersectionPoint, outPoly, intersections) {
+function walkPolylineForwards(intersectionPoint, outPoly) {
   let nextEdge = intersectionPoint.polylineEdge
   if (nextEdge.intersectionPoints.length === 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
@@ -200,7 +201,8 @@ function walkPolylineForwards(intersectionPoint, outPoly, intersections) {
   } else if (nextEdge.intersectionPoints.length > 2) {
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
     if (lastPointOnEdge !== intersectionPoint) {
-      const nextPointOnEdge = intersections[intersectionPoint.ip + 1]
+      let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
+      let nextPointOnEdge = nextEdge.intersectionPoints[currentIndex + 1]
       outPoly.push(nextPointOnEdge.p)
       nextPointOnEdge.visitCount = nextPointOnEdge.visitCount + 1
       return nextPointOnEdge
