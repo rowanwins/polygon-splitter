@@ -138,6 +138,7 @@ function findIndexOfIntersectionPoint(intersection, intersections) {
     const int = intersections[index]
     if (int === intersection) return index
   }
+  return null
 }
 
 
