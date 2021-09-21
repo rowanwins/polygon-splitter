@@ -102,7 +102,7 @@ export default function (polygon, line) {
     properties: {},
     geometry: {
       type: 'MultiPolygon',
-      coordinates: [outPolys]
+      coordinates: outPolys.map(poly => [poly])
     }
   }
 }
