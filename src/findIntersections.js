@@ -5,7 +5,6 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
   let i, ii, iii
   let count = lineEdges.length
   let polyCount = polygonEdges.length
-  let intersectionCount = 0
   for (i = 0; i < count; i++) {
     let lineEdge = lineEdges[i]
 
@@ -19,9 +18,8 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
       if (intersection !== null) {
         for (iii = 0; iii < intersection.length; iii++) {
           const isHeadingIn = orient2d(polygonEdge.p1.p[0], polygonEdge.p1.p[1], polygonEdge.p2.p[0], polygonEdge.p2.p[1], lineEdge.p1.p[0], lineEdge.p1.p[1])
-          var ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0, intersectionCount)
+          const ip = new IntersectionPoint(intersection[iii], lineEdge, polygonEdge, isHeadingIn > 0)
           intersectingPoints.push(ip)
-          intersectionCount = intersectionCount + 1
         }
       }
     }
@@ -39,7 +37,7 @@ export function findIntersectionPoints(polygonEdges, lineEdges, intersectingPoin
   })
 }
 
-var EPSILON = 1e-9
+const EPSILON = 1e-9
 
 function crossProduct(a, b) {
   return (a[0] * b[1]) - (a[1] * b[0])
@@ -57,19 +55,19 @@ function toPoint(p, s, d) {
 }
 
 export function getEdgeIntersection(lineEdge, potentialEdge, noEndpointTouch) {
-  var va = [lineEdge.p2.p[0] - lineEdge.p1.p[0], lineEdge.p2.p[1] - lineEdge.p1.p[1]]
-  var vb = [potentialEdge.p2.p[0] - potentialEdge.p1.p[0], potentialEdge.p2.p[1] - potentialEdge.p1.p[1]]
+  const va = [lineEdge.p2.p[0] - lineEdge.p1.p[0], lineEdge.p2.p[1] - lineEdge.p1.p[1]]
+  const vb = [potentialEdge.p2.p[0] - potentialEdge.p1.p[0], potentialEdge.p2.p[1] - potentialEdge.p1.p[1]]
 
-  var e = [potentialEdge.p1.p[0] - lineEdge.p1.p[0], potentialEdge.p1.p[1] - lineEdge.p1.p[1]]
-  var kross = crossProduct(va, vb)
-  var sqrKross = kross * kross
-  var sqrLenA  = dotProduct(va, va)
+  const e = [potentialEdge.p1.p[0] - lineEdge.p1.p[0], potentialEdge.p1.p[1] - lineEdge.p1.p[1]]
+  let kross = crossProduct(va, vb)
+  let sqrKross = kross * kross
+  const sqrLenA  = dotProduct(va, va)
 
   if (sqrKross > 0) {
 
-    var s = crossProduct(e, vb) / kross
+    const s = crossProduct(e, vb) / kross
     if (s < 0 || s > 1) return null
-    var t = crossProduct(e, va) / kross
+    const t = crossProduct(e, va) / kross
     if (t < 0 || t > 1) return null
     if (s === 0 || s === 1) {
       // on an endpoint of line segment a
@@ -82,16 +80,16 @@ export function getEdgeIntersection(lineEdge, potentialEdge, noEndpointTouch) {
     return [toPoint(lineEdge.p1.p, s, va)]
   }
 
-  var sqrLenE = dotProduct(e, e)
+  const sqrLenE = dotProduct(e, e)
   kross = crossProduct(e, va)
   sqrKross = kross * kross
 
   if (sqrKross > EPSILON * sqrLenA * sqrLenE) return null
 
-  var sa = dotProduct(va, e) / sqrLenA
-  var sb = sa + dotProduct(va, vb) / sqrLenA
-  var smin = Math.min(sa, sb)
-  var smax = Math.max(sa, sb)
+  const sa = dotProduct(va, e) / sqrLenA
+  const sb = sa + dotProduct(va, vb) / sqrLenA
+  const smin = Math.min(sa, sb)
+  const smax = Math.max(sa, sb)
 
   if (smin <= 1 && smax >= 0) {
 
