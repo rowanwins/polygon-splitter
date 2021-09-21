@@ -1,6 +1,6 @@
 {
   "name": "polygon-splitter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Split a polygon using a polyline.",
   "main": "dist/polygonsplitter.js",
   "module": "dist/polygonsplitter.mjs",
