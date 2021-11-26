@@ -3,7 +3,7 @@
 </template>
 
 <script>
-const data = require('../../test/harness/in/diamond-hole.geojson')
+import data from '../../test/harness/in/issue-6.json'
 import splitPoly from '../../src/index'
 
 import L from 'leaflet'
@@ -25,7 +25,7 @@ let buffered = null
 export default {
   name: 'app',
   mounted () {
-
+    
     const layer = L.geoJSON(data, {
       weight: 10,
       fillOpacity: 0,

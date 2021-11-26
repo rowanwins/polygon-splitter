@@ -1,6 +1,6 @@
 import {fillQueue} from './fillQueue'
 import {findIntersectionPoints} from './findIntersections.js'
-// import { _debugCandidatePoly, _debugLinePoints, _debugIntersectionPoints, _debugPolyStart } from './debug'
+// import { _debugCandidatePoly, _debugIntersectionPoint, _debugLinePoints, _debugIntersectionPoints, _debugPolyStart } from './debug'
 
 export default function (polygon, line) {
   const intersections = []
@@ -11,6 +11,10 @@ export default function (polygon, line) {
   fillQueue(polygon, line, polygonEdges, polylineEdges, polylineBbox)
 
   findIntersectionPoints(polygonEdges, polylineEdges, intersections)
+
+  if (intersections.length === 0) {
+    return polygon
+  }
   const outPolys = []
   // _debugIntersectionPoints(intersections)
   // Start the rewiring of the outputs from the first intersection point along the polyline line
@@ -111,12 +115,13 @@ export default function (polygon, line) {
 function walkPolygonForwards(intersectionPoint, outPoly) {
   let nextEdge = intersectionPoint.polygonEdge
   if (nextEdge.intersectionPoints.length > 1) {
+    // _debugIntersectionPoint(intersectionPoint)
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
     if (lastPointOnEdge !== intersectionPoint) {
       let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
       let nextIp = nextEdge.intersectionPoints[currentIndex + 1]
       outPoly.push(nextIp.p)
-      nextIp.visitCount = nextIp.visitCount + 1
+      nextIp.incrementVisitCount()
       return nextIp
     }
   }
@@ -127,7 +132,7 @@ function walkPolygonForwards(intersectionPoint, outPoly) {
     if (nextEdge === null) return intersectionPoint
     else if (nextEdge.intersectionPoints.length > 0) condition = false
   }
-  nextEdge.intersectionPoints[0].visitCount = nextEdge.intersectionPoints[0].visitCount + 1
+  nextEdge.intersectionPoints[0].incrementVisitCount()
   outPoly.push(nextEdge.intersectionPoints[0].p)
   return nextEdge.intersectionPoints[0]
 }
@@ -150,23 +155,29 @@ function walkPolylineBackwards(intersectionPoint, outPoly) {
     if (lastPointOnEdge === intersectionPoint) {
       const nextIntersection = nextEdge.intersectionPoints[0]
       outPoly.push(nextIntersection.p)
-      nextIntersection.visitCount = nextIntersection.visitCount + 1
+      nextIntersection.incrementVisitCount()
       return nextIntersection
     } else {
       outPoly.push(lastPointOnEdge.p)
-      lastPointOnEdge.visitCount = lastPointOnEdge.visitCount + 1
+      lastPointOnEdge.incrementVisitCount()
       return lastPointOnEdge
     }
   } else if (nextEdge.intersectionPoints.length > 2) {
+    // _debugIntersectionPoint(intersectionPoint)
+
     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
     if (lastPointOnEdge === intersectionPoint) {
       let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
       let nextIntersection = nextEdge.intersectionPoints[currentIndex - 1]
       outPoly.push(nextIntersection.p)
-      nextIntersection.visitCount = nextIntersection.visitCount + 1
+      nextIntersection.incrementVisitCount()
       return nextIntersection
     } else {
-      return nextEdge.intersectionPoints[0]
+      let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
+      let nextIntersection = nextEdge.intersectionPoints[currentIndex - 1]
+      outPoly.push(nextIntersection.p)
+      nextIntersection.incrementVisitCount()
+      return nextIntersection
     }
   }
   let condition = true
@@ -180,7 +191,7 @@ function walkPolylineBackwards(intersectionPoint, outPoly) {
   }
   if (nextEdge.originalIndex === undefined) return intersectionPoint
   const lastIntersection = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
-  lastIntersection.visitCount = lastIntersection.visitCount + 1
+  lastIntersection.incrementVisitCount()
   outPoly.push(lastIntersection.p)
   return lastIntersection
 }
@@ -192,11 +203,11 @@ function walkPolylineForwards(intersectionPoint, outPoly) {
     if (lastPointOnEdge === intersectionPoint) {
       const nextIntersection = nextEdge.intersectionPoints[0]
       outPoly.push(nextIntersection.p)
-      nextIntersection.visitCount = nextIntersection.visitCount + 1
+      nextIntersection.incrementVisitCount()
       return nextIntersection
     } else {
       outPoly.push(lastPointOnEdge.p)
-      lastPointOnEdge.visitCount = lastPointOnEdge.visitCount + 1
+      lastPointOnEdge.incrementVisitCount()
       return lastPointOnEdge
     }
   } else if (nextEdge.intersectionPoints.length > 2) {
@@ -205,7 +216,7 @@ function walkPolylineForwards(intersectionPoint, outPoly) {
       let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
       let nextPointOnEdge = nextEdge.intersectionPoints[currentIndex + 1]
       outPoly.push(nextPointOnEdge.p)
-      nextPointOnEdge.visitCount = nextPointOnEdge.visitCount + 1
+      nextPointOnEdge.incrementVisitCount()
       return nextPointOnEdge
     }
   }
@@ -218,7 +229,7 @@ function walkPolylineForwards(intersectionPoint, outPoly) {
   }
   if (nextEdge === undefined) return intersectionPoint
   const lastIntersection = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
-  lastIntersection.visitCount = lastIntersection.visitCount + 1
+  lastIntersection.incrementVisitCount()
   outPoly.push(lastIntersection.p)
   return lastIntersection
 }

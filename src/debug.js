@@ -24,6 +24,19 @@ export function _debugIntersectionPoints(points) {
   pLayerGroup.clearLayers()
 }
 
+export function _debugIntersectionPoint(point) {
+  if (process.env.NODE_ENV !== 'development') return
+  const map = window.map
+  const pLayerGroup = L.layerGroup([]).addTo(map)
+
+  L.circleMarker([point.p[1], point.p[0]], {
+    color: 'red'
+  }).addTo(pLayerGroup)
+
+  debugger
+  pLayerGroup.clearLayers()
+}
+
 export function _debugPolyStart(polyStart) {
   if (process.env.NODE_ENV !== 'development') return
   const map = window.map

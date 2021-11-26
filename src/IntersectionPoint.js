@@ -14,6 +14,10 @@ export class IntersectionPoint {
 
     this.visitCount = 0
   }
+
+  incrementVisitCount() {
+    this.visitCount = this.visitCount + 1
+  }
 }
 
 function distance(p1, p2) {
