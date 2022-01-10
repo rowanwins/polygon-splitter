@@ -165,14 +165,8 @@ function walkPolylineBackwards(intersectionPoint, outPoly) {
   } else if (nextEdge.intersectionPoints.length > 2) {
     // _debugIntersectionPoint(intersectionPoint)
 
-    const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
-    if (lastPointOnEdge === intersectionPoint) {
-      let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
-      let nextIntersection = nextEdge.intersectionPoints[currentIndex - 1]
-      outPoly.push(nextIntersection.p)
-      nextIntersection.incrementVisitCount()
-      return nextIntersection
-    } else {
+    const lastPointOnEdge = nextEdge.intersectionPoints[0]
+    if (lastPointOnEdge !== intersectionPoint) {
       let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
       let nextIntersection = nextEdge.intersectionPoints[currentIndex - 1]
       outPoly.push(nextIntersection.p)
@@ -228,7 +222,7 @@ function walkPolylineForwards(intersectionPoint, outPoly) {
     else if (nextEdge.intersectionPoints.length > 0) condition = false
   }
   if (nextEdge === undefined) return intersectionPoint
-  const lastIntersection = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
+  const lastIntersection = nextEdge.intersectionPoints[0]
   lastIntersection.incrementVisitCount()
   outPoly.push(lastIntersection.p)
   return lastIntersection

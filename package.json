@@ -1,6 +1,6 @@
 {
   "name": "polygon-splitter",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Split a polygon using a polyline.",
   "main": "dist/polygonsplitter.js",
   "module": "dist/polygonsplitter.mjs",
@@ -22,7 +22,7 @@
       "test/test.js"
     ],
     "require": [
-      "@babel/register"
+      "esm"
     ]
   },
   "license": "MIT",
@@ -30,11 +30,15 @@
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/pluginutils": "^4.1.2",
+    "@turf/rewind": "^6.5.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "ava": "^3.15.0",
     "benchmark": "^2.1.4",
     "eslint": "^4.16.0",
     "eslint-config-mourner": "^2.0.3",
+    "esm": "^3.2.25",
+    "geojson-equality": "^0.2.0",
     "leaflet": "^1.7.1",
     "load-json-file": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
