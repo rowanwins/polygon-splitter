@@ -1,14 +1,17 @@
+import rewind from '@turf/rewind'
 import {fillQueue} from './fillQueue'
 import {findIntersectionPoints} from './findIntersections.js'
 // import { _debugCandidatePoly, _debugIntersectionPoint, _debugLinePoints, _debugIntersectionPoints, _debugPolyStart } from './debug'
 
 export default function (polygon, line) {
+  const poly = rewind(polygon)
+
   const intersections = []
   const polygonEdges = []
   const polylineEdges = []
   const polylineBbox = [Infinity, Infinity, Infinity, Infinity]
 
-  fillQueue(polygon, line, polygonEdges, polylineEdges, polylineBbox)
+  fillQueue(poly, line, polygonEdges, polylineEdges, polylineBbox)
 
   findIntersectionPoints(polygonEdges, polylineEdges, intersections)
 

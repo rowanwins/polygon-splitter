@@ -1,3 +1,7 @@
+# 0.0.7
+- Fix bug on constructing outputs, resolves issue #8
+- Add more tests related to testing winding order of inputs
+
 # 0.0.6
 - Fix bug on constructing outputs, resolves issue #7
 - Add more tests related to testing winding order of inputs

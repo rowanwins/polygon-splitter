@@ -52,6 +52,19 @@ test('Check outputs E2E - winding on line', t => {
   })
 })
 
+test('Check outputs E2E - winding on line reversed', t => {
+  const qe = new GeojsonEquality({direction: false, precision: 5})
+
+  fixtures.forEach(fixture => {
+    var out = polySplit(fixture.geojson.features[0], rewind(fixture.geojson.features[1], {
+      reverse: true
+    }))
+    const res = qe.compare(out, load.sync(directories.out + fixture.filename))
+    t.true(res, fixture.name)
+    t.deepEqual(out.geometry.coordinates.length, fixture.geojson.features[0].properties.expected)
+  })
+})
+
 
 test('Check outputs E2E - winding on both', t => {
   const qe = new GeojsonEquality({direction: false, precision: 5})

@@ -1,6 +1,6 @@
 {
   "name": "polygon-splitter",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Split a polygon using a polyline.",
   "main": "dist/polygonsplitter.js",
   "module": "dist/polygonsplitter.mjs",
@@ -32,6 +32,7 @@
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@rollup/pluginutils": "^4.1.2",
     "@turf/rewind": "^6.5.0",
+    "@turf/turf": "^6.5.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "ava": "^3.15.0",
     "benchmark": "^2.1.4",

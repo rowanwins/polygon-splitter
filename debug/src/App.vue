@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import data from '../../test/harness/in/zigzag.geojson'
+import data from '../../test/harness/in/issue-8.geojson'
 import splitPoly from '../../src/index'
 
 import L from 'leaflet'
@@ -11,7 +11,6 @@ import 'leaflet/dist/leaflet.css'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import marker2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
-import rewind from '@turf/rewind'
 
 // Hack to get the markers into Vue correctly
 delete L.Icon.Default.prototype._getIconUrl
@@ -38,11 +37,11 @@ export default {
 
     layer.addTo(map)
 
-    const poly = rewind(data.features[0])
-    const line = rewind(data.features[1])
-    // const line = data.features[1]
+    const poly = data.features[0]
+    const line = data.features[1]
 
     const out = splitPoly(poly, line)
+
     L.geoJSON(out, {
       fillOpacity: 0.2,
       weight: 3,
