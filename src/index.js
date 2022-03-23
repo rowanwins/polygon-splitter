@@ -25,7 +25,7 @@ export default function (polygon, line) {
   let firstPolyStart = null
   for (let index = 0; index < polylineEdges.length; index++) {
     const pe = polylineEdges[index]
-    if (pe.intersectionPoints) {
+    if (pe.intersectionPoints.length > 0) {
       firstPolyStart = pe.intersectionPoints[0]
       break
     }

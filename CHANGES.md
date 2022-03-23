@@ -1,3 +1,6 @@
+# 0.0.8
+- Fix bug with finding the first intersection
+
 # 0.0.7
 - Fix bug on constructing outputs, resolves issue #8
 - Add more tests related to testing winding order of inputs
