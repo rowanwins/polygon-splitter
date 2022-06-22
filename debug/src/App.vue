@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import data from '../../test/harness/in/issue-8.geojson'
+import data from '../../test/harness/in/hole.geojson'
 import splitPoly from '../../src/index'
 
 import L from 'leaflet'

@@ -1,3 +1,6 @@
+# 0.0.9
+- Fix another infinite loop case with holes back to outer ring
+
 # 0.0.8
 - Fix bug with finding the first intersection
 
