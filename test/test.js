@@ -3,6 +3,7 @@ import load from 'load-json-file'
 import write from 'write-json-file'
 import path from 'path'
 import fs from 'fs'
+import glob from 'glob'
 import rewind from '@turf/rewind'
 import GeojsonEquality from 'geojson-equality'
 import polySplit from '../src/index'
@@ -12,11 +13,14 @@ const directories = {
   out: path.join(__dirname, 'harness', 'out') + path.sep
 }
 
-const fixtures = fs.readdirSync(directories.in).map(filename => {
+const files = glob.sync(`${directories.in}/*.geojson`, {})
+
+const fixtures = files.map(filename => {
+  const parsed = path.parse(filename)
   return {
-    filename,
-    name: path.parse(filename).name,
-    geojson: load.sync(path.join(directories.in, filename))
+    filename: parsed.base,
+    name: parsed.name,
+    geojson: load.sync(filename)
   }
 })
 

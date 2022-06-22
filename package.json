@@ -48,6 +48,7 @@
     "write-json-file": "^4.3.0"
   },
   "dependencies": {
+    "glob": "^8.0.3",
     "robust-predicates": "^2.0.4"
   },
   "keywords": [

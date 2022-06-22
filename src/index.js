@@ -71,11 +71,24 @@ export default function (polygon, line) {
     // starting point for our next output polygon
     nextPolyStart = nextIntersection
 
+
+    // Although sometimes we walk all the way around the outside
+    // because our split line goes from outer to inner ring
+    let override = false
+    if (nextIntersection === nextPolyStart && intersections.length === 2) {
+      for (let index = 0; index < intersections.length; index++) {
+        const intersection = intersections[index]
+        if (intersection.visitCount < 2) {
+          override = true
+        }
+      }
+    }
+
     // An ouput polygon has to contain at least 1 stretch from the original polygon
     // and one stretch from the polyline
     // However it can contain many stretches of each
     // So we walk continually from polyline to polygon collecting the output
-    while (nextIntersection !== polyStart) {
+    while (nextIntersection !== polyStart || override) {
       const methodForPolyline = nextIntersection.isHeadingIn ? walkPolylineForwards : walkPolylineBackwards
       nextIntersection = methodForPolyline(nextIntersection, outPoly)
       // _debugCandidatePoly(outPolys)
@@ -84,6 +97,7 @@ export default function (polygon, line) {
         nextIntersection = walkPolygonForwards(nextIntersection, outPoly, intersections)
         // _debugCandidatePoly(outPolys)
       }
+      override = false
     }
 
     if (nextPolyStart.visitCount >= 2) {

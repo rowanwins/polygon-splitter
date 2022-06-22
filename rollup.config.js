@@ -15,7 +15,7 @@ const output = (file, format, plugins) => ({
 })
 
 export default [
-  output('./dist/polygonsplitter.mjs', 'es', [nodeResolve(), commonjs(), buble()]),
-  output('./dist/polygonsplitter.js', 'umd', [nodeResolve(), commonjs(), buble()]),
-  output('./dist/polygonsplitter.min.js', 'umd', [nodeResolve(), commonjs(), buble(), terser()])
+  output('./dist/polygonsplitter.mjs', 'es', [commonjs(), buble()]),
+  output('./dist/polygonsplitter.js', 'umd', [commonjs(), buble()]),
+  output('./dist/polygonsplitter.min.js', 'umd', [commonjs(), nodeResolve(), buble(), terser()])
 ]
