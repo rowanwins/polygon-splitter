@@ -1,7 +1,10 @@
 import {Edge} from './Edge'
 import {Point} from './Point'
+import {Contour} from './Contour'
 
 export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox) {
+  let numberOfRingsInPolygon = 0
+  const contours = []
 
   const linegeom = line.type === 'Feature' ? line.geometry : line
   const linecoords = linegeom.type === 'LineString' ? [linegeom.coordinates] : linegeom.coordinates
@@ -19,7 +22,7 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox) {
       p2 = new Point(linecoords[i][ii + 1])
       p1.nextPoint = p2
       p2.prevPoint = p1
-      const e = new Edge(p1, p2, 'polyline', edgeCount)
+      const e = new Edge(p1, p2, 'polyline', edgeCount, null)
       lineEdges.push(e)
       prevEdge.nextEdge = e
       e.prevEdge = prevEdge
@@ -48,8 +51,12 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox) {
     let polyLenth2 = polycoords[i].length
 
     for (let ii = 0; ii < polyLenth2; ii++) {
+      numberOfRingsInPolygon = numberOfRingsInPolygon + 1
+
       let polygonSet = polycoords[i][ii]
       let polyLenth3 = polygonSet.length
+      
+      contours.push(new Contour(numberOfRingsInPolygon, polygonSet))
 
       const firstPoint = new Point(polygonSet[0])
       let p1 = firstPoint
@@ -62,7 +69,7 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox) {
         p1.nextPoint = p2
         p2.prevPoint = p1
 
-        e = new Edge(p1, p2, 'polygon', edgeCount)
+        e = new Edge(p1, p2, 'polygon', edgeCount, numberOfRingsInPolygon)
         prevEdge.nextEdge = e
         e.prevEdge = prevEdge
         if (iii === 1) firstEdge = e
@@ -82,6 +89,7 @@ export function fillQueue(polygon, line, polyEdges, lineEdges, polylineBbox) {
       firstPoint.prevPoint = p2.prevPoint
     }
   }
+  return contours
 }
 
 function edgeIntersectsBbox(edge, bbox) {

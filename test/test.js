@@ -7,6 +7,7 @@ import glob from 'glob'
 import rewind from '@turf/rewind'
 import GeojsonEquality from 'geojson-equality'
 import polySplit from '../src/index'
+import {check} from '@placemarkio/check-geojson'
 
 const directories = {
   in: path.join(__dirname, 'harness', 'in') + path.sep,
@@ -28,8 +29,14 @@ test('Check outputs E2E', t => {
   fixtures.forEach(fixture => {
     var out = polySplit(fixture.geojson.features[0], fixture.geojson.features[1])
 
-    if (process.env.REGEN) write.sync(path.join(directories.out, fixture.filename), out)
+    try {
+      check(JSON.stringify(out))
+      t.pass(`Valid geojson generated - ${fixture.name}`)
+    } catch (e) {
+      t.fail(`Invalid geojson generated - ${fixture.name}`)
+    }
 
+    if (process.env.REGEN) write.sync(path.join(directories.out, fixture.filename), out)
     t.deepEqual(out, load.sync(directories.out + fixture.filename), fixture.name)
     t.deepEqual(out.geometry.coordinates.length, fixture.geojson.features[0].properties.expected)
   })

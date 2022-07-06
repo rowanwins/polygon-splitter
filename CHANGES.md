@@ -1,3 +1,10 @@
+# 0.0.11
+- Fix up some handling for those rings (outer and holes) that aren't intersected by the split line.
+- Add output geojson validation for test files
+
+# 0.0.10
+- Fix up packaging of dependencies
+
 # 0.0.9
 - Fix another infinite loop case with holes back to outer ring
 

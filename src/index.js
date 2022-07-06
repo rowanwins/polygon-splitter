@@ -1,4 +1,5 @@
 import rewind from '@turf/rewind'
+import inside from 'point-in-polygon-hao'
 import {fillQueue} from './fillQueue'
 import {findIntersectionPoints} from './findIntersections.js'
 // import { _debugCandidatePoly, _debugIntersectionPoint, _debugLinePoints, _debugIntersectionPoints, _debugPolyStart } from './debug'
@@ -11,13 +12,24 @@ export default function (polygon, line) {
   const polylineEdges = []
   const polylineBbox = [Infinity, Infinity, Infinity, Infinity]
 
-  fillQueue(poly, line, polygonEdges, polylineEdges, polylineBbox)
+  const contours = fillQueue(poly, line, polygonEdges, polylineEdges, polylineBbox)
 
   findIntersectionPoints(polygonEdges, polylineEdges, intersections)
 
   if (intersections.length === 0) {
     return polygon
   }
+
+  // Track the number of intersections per contour
+  // This is useful for holes or outerrings that aren't intersected
+  // so that we can manually add them back in at the end
+  const numberIntersectionsByRing = {}
+  contours.forEach(c => numberIntersectionsByRing[c.id] = 0) //eslint-disable-line
+  intersections.forEach(i => {
+    const id = i.polygonEdge.polygonContourId
+    numberIntersectionsByRing[id] = numberIntersectionsByRing[id] + 1
+  })
+
 
   let infiniteLoopGuard = 0
   const outPolys = []
@@ -119,15 +131,51 @@ export default function (polygon, line) {
     polyStart = nextPolyStart
   }
 
+  const outCoordinates = outPolys.map(poly => [poly])
+
+  const keys = Object.keys(numberIntersectionsByRing)
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index]
+    const value = numberIntersectionsByRing[key]
+    if (value === 0) {
+      const edge = findFirstPolygonEdge(polygonEdges, parseInt(key))
+      const ring = findRingFromEdge(edge, contours)
+      createAsHoleOrAddAsNewOuterRing(ring, outCoordinates)
+    }
+  }
 
   return {
     type: 'Feature',
     properties: {},
     geometry: {
       type: 'MultiPolygon',
-      coordinates: outPolys.map(poly => [poly])
+      coordinates: outCoordinates
     }
   }
+}
+
+function findFirstPolygonEdge(polygonEdges, contourId) {
+  for (let index = 0; index < polygonEdges.length; index++) {
+    const edge = polygonEdges[index];
+    if (edge.polygonContourId === contourId) return edge
+  }
+}
+
+function findRingFromEdge(edge, contours) {
+  const contour = contours.find(c => c.id === edge.polygonContourId)
+  return contour.rawCoords
+}
+
+function createAsHoleOrAddAsNewOuterRing(unusedRing, outCoordinates) {
+  for (let index = 0; index < outCoordinates.length; index++) {
+    const existingRing = outCoordinates[index];
+    if (inside(unusedRing[0], [existingRing[0]])) {
+      existingRing.push(unusedRing)
+      return
+    }
+  }
+  // If no match is found push it as a new outer ring
+  outCoordinates.push([unusedRing])
 }
 
 // Walk around the polygon collecting vertices
